@@ -95,7 +95,46 @@ const SalesSection = () => {
         </div>
       </div>
 
-      {/* CTA */}
+      {/* Post-testimonial copy */}
+      <div className="flex flex-col gap-3 text-foreground text-sm leading-relaxed mt-4">
+        <p className="font-bold text-base text-center">E aqui está a melhor parte:</p>
+        <p className="text-center">Esses caras estavam exatamente onde você está agora.</p>
+        <p>➡️ Bloqueados no WhatsApp.</p>
+        <p>➡️ Ignorados.</p>
+        <p>➡️ Cheios de arrependimento, dúvidas e medo de nunca mais ter uma chance.</p>
+        <p className="font-semibold">Mas decidiram agir.</p>
+        <p>E quando aplicaram o protocolo, <strong>o jogo virou.</strong></p>
+        <p>Hoje, são eles que recebem mensagem primeiro.</p>
+        <p>São eles que fazem a ex sentir saudade de novo.</p>
+        <p>São eles que escolheram se queriam voltar — ou se era tarde demais pra ela.</p>
+        <p className="font-semibold">E tudo começou com uma única decisão:</p>
+        <p>Desbloquear o poder de reprogramar o cérebro da ex com o <strong className="text-primary">Código da Reconquista.</strong></p>
+        <p className="font-bold text-center">E você pode tomar essa mesma decisão apertando o botão abaixo:</p>
+      </div>
+
+      {/* CTA 1 */}
+      <button
+        onClick={() => window.open("#", "_blank")}
+        className="w-full py-4 rounded-lg bg-cta text-cta-foreground font-bold text-lg uppercase tracking-wide hover:opacity-90 transition-opacity animate-pulse"
+      >
+        QUERO MEU PROTOCOLO AGORA!
+      </button>
+
+      {/* Second copy block */}
+      <div className="flex flex-col gap-3 text-foreground text-sm leading-relaxed mt-4">
+        <p>E olha… você não está aqui por acaso.</p>
+        <p>Você está aqui porque sabe que sua ex não te enxerga mais como antes.</p>
+        <p className="font-semibold">E agora você só tem duas opções:</p>
+        <p>❌ Continuar mandando mensagens aleatórias, vendo ela correr pros braços de outro.</p>
+        <p>✅ Ou aplicar mensagens cirúrgicas do protocolo, que fazem ela querer se comprometer de novo.</p>
+        <p className="font-semibold">O <strong className="text-primary">Código da Reconquista</strong> te entrega exatamente:</p>
+        <p>👉 O que dizer, quando dizer e como manter a mente dela viciada em você.</p>
+        <p className="font-bold text-center">Clique no botão abaixo.</p>
+        <p className="text-center">Desbloqueie seu acesso agora.</p>
+        <p className="font-bold text-center">E assuma o seu lugar — no centro dos pensamentos dela.</p>
+      </div>
+
+      {/* CTA 2 */}
       <button
         onClick={() => window.open("#", "_blank")}
         className="w-full py-4 rounded-lg bg-cta text-cta-foreground font-bold text-lg uppercase tracking-wide hover:opacity-90 transition-opacity animate-pulse"
