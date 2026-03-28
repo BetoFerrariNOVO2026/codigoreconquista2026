@@ -3,6 +3,10 @@ import testimonial1 from "@/assets/testimonial-1.png";
 import testimonial2 from "@/assets/testimonial-2.png";
 import testimonial3 from "@/assets/testimonial-3.png";
 import testimonial4 from "@/assets/testimonial-4.png";
+import testimonial5 from "@/assets/testimonial-5.png";
+import testimonial6 from "@/assets/testimonial-6.png";
+import testimonial7 from "@/assets/testimonial-7.png";
+import testimonial8 from "@/assets/testimonial-8.png";
 
 const bonuses = [
   {
@@ -35,6 +39,18 @@ const bonuses = [
     originalPrice: "R$ 147,00",
     description: "Evite esses 7 erros da reconquista e aumente suas chances de voltar com ela ainda essa semana em 8x transformando cada um deles numa vantagem.",
   },
+  {
+    icon: "🎁",
+    title: "Comunidade Desenrolado",
+    originalPrice: "R$ 997,00",
+    description: "Um grupo fechado, só de homens que também estão usando o Código da Reconquista — compartilhando prints, frases e vitórias em tempo real.",
+  },
+  {
+    icon: "🎥",
+    title: "Lives Semanais Comigo, Mentoria Bruta.",
+    originalPrice: "R$ 1.497,00",
+    description: "Toda semana eu entro AO VIVO com você e com os outros caras pra destrinchar casos reais, responder dúvidas e entregar novas táticas direto da trincheira.",
+  },
 ];
 
 const SalesSection = () => {
@@ -45,7 +61,7 @@ const SalesSection = () => {
           🎁 Seu Protocolo está pronto!
         </h2>
         <p className="text-muted-foreground text-sm">
-          Além do protocolo, você receberá <strong className="text-foreground">5 bônus exclusivos</strong> totalmente grátis:
+          Além do protocolo, você receberá <strong className="text-foreground">7 bônus exclusivos</strong> totalmente grátis:
         </p>
       </div>
 
@@ -68,7 +84,7 @@ const SalesSection = () => {
           💬 Veja o que estão dizendo:
         </h3>
         <div className="flex flex-col gap-3">
-          {[testimonial1, testimonial2, testimonial3, testimonial4].map((img, i) => (
+          {[testimonial1, testimonial2, testimonial3, testimonial4, testimonial5, testimonial6, testimonial7, testimonial8].map((img, i) => (
             <img
               key={i}
               src={img}

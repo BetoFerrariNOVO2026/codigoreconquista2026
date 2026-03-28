@@ -185,10 +185,10 @@ const Index = () => {
     return (
       <QuizLayout step={TOTAL_STEPS} totalSteps={TOTAL_STEPS}>
         <div className="flex flex-col items-center text-center gap-6">
-          <p className="text-foreground text-base font-semibold">
-            Aguarde, estamos criando o seu{" "}
-            <strong className="text-primary">Protocolo Personalizado de Reconquista</strong>...
-          </p>
+          <h2 className="text-lg font-bold text-foreground leading-tight">
+            Assista o vídeo abaixo enquanto criamos seu{" "}
+            <strong className="text-primary">protocolo personalizado de reconquista.</strong>
+          </h2>
 
           {/* Video area - Story format (9:16) */}
           <div className="w-full max-w-[320px] mx-auto rounded-lg overflow-hidden bg-foreground/5 flex items-center justify-center" style={{ aspectRatio: "9/16" }}>
@@ -248,6 +248,11 @@ const Index = () => {
               </div>
             )}
           </div>
+
+          <p className="text-foreground text-base font-semibold">
+            Aguarde, estamos criando o seu{" "}
+            <strong className="text-primary">Protocolo Personalizado de Reconquista</strong>...
+          </p>
 
           {/* Sequential loading bars */}
           <div className="flex flex-col gap-4 w-full text-left">
