@@ -14,9 +14,10 @@ const CountdownTimer = () => {
 
   const minutes = Math.floor(seconds / 60);
   const secs = seconds % 60;
+  const isUrgent = seconds <= 5 * 60 && seconds > 0;
 
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className={`flex flex-col items-center gap-2 ${isUrgent ? "animate-shake" : ""}`}>
       <p className="text-sm text-destructive font-semibold">⏰ Oferta expira em:</p>
       <div className="flex gap-2">
         <div className="bg-destructive text-destructive-foreground rounded-lg px-4 py-2 text-2xl font-bold tabular-nums">
