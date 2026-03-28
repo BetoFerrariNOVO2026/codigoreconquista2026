@@ -116,14 +116,13 @@ const Index = () => {
           const newP = [...prev];
           newP[idx] = Math.min(newP[idx] + 1, 100);
 
-          if (newP[idx] >= 80 && idx === currentIndex) {
+          if (newP[idx] >= 90 && idx === currentIndex) {
             currentIndex++;
             startNext();
           }
 
           if (newP[idx] >= 100) {
             clearInterval(interval);
-            // Check if all are done
             if (idx === loadingSteps.length - 1) {
               setAllLoaded(true);
             }
@@ -131,7 +130,7 @@ const Index = () => {
 
           return newP;
         });
-      }, 120);
+      }, 400);
     };
 
     startNext();
