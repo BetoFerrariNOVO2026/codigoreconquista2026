@@ -3,6 +3,7 @@ import QuizLayout from "@/components/QuizLayout";
 import QuizOption from "@/components/QuizOption";
 import CheckItem from "@/components/CheckItem";
 import whatsappChat from "@/assets/whatsapp-chat.png";
+import SalesSection from "@/components/SalesSection";
 import { AlertCircle } from "lucide-react";
 
 const TOTAL_STEPS = 8;
@@ -87,6 +88,7 @@ const Index = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loadingItems, setLoadingItems] = useState<number[]>([]);
   const [loadingProgresses, setLoadingProgresses] = useState<number[]>(new Array(loadingSteps.length).fill(0));
+  const [allLoaded, setAllLoaded] = useState(false);
 
   const handleSelect = (optionIndex: number) => {
     setAnswers({ ...answers, [step]: optionIndex });
@@ -99,6 +101,7 @@ const Index = () => {
 
     setLoadingItems([]);
     setLoadingProgresses(new Array(loadingSteps.length).fill(0));
+    setAllLoaded(false);
 
     let currentIndex = 0;
 
@@ -111,21 +114,24 @@ const Index = () => {
       const interval = setInterval(() => {
         setLoadingProgresses((prev) => {
           const newP = [...prev];
-          newP[idx] = Math.min(newP[idx] + 2, 100);
+          newP[idx] = Math.min(newP[idx] + 1, 100);
 
-          // When this bar reaches ~70%, start the next one
-          if (newP[idx] >= 70 && idx === currentIndex) {
+          if (newP[idx] >= 80 && idx === currentIndex) {
             currentIndex++;
             startNext();
           }
 
           if (newP[idx] >= 100) {
             clearInterval(interval);
+            // Check if all are done
+            if (idx === loadingSteps.length - 1) {
+              setAllLoaded(true);
+            }
           }
 
           return newP;
         });
-      }, 60);
+      }, 120);
     };
 
     startNext();
@@ -179,9 +185,9 @@ const Index = () => {
     return (
       <QuizLayout step={TOTAL_STEPS} totalSteps={TOTAL_STEPS}>
         <div className="flex flex-col items-center text-center gap-6">
-          <p className="text-foreground text-base">
-            Assista o vídeo abaixo enquanto criamos seu{" "}
-            <strong>protocolo personalizado de reconquista</strong>.
+          <p className="text-foreground text-base font-semibold">
+            Aguarde, estamos criando o seu{" "}
+            <strong className="text-primary">Protocolo Personalizado de Reconquista</strong>...
           </p>
 
           {/* Video area - Story format (9:16) */}
@@ -268,6 +274,8 @@ const Index = () => {
               );
             })}
           </div>
+
+          {allLoaded && <SalesSection />}
         </div>
       </QuizLayout>
     );
