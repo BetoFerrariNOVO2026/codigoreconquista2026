@@ -249,6 +249,11 @@ const Index = () => {
             )}
           </div>
 
+          <p className="text-foreground text-base font-semibold">
+            Aguarde, estamos criando o seu{" "}
+            <strong className="text-primary">Protocolo Personalizado de Reconquista</strong>...
+          </p>
+
           {/* Sequential loading bars */}
           <div className="flex flex-col gap-4 w-full text-left">
             {loadingSteps.map((text, i) => {
