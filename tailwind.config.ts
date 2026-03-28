@@ -47,15 +47,18 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: "hsl(var(--sidebar-primary))",
-          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
+        cta: {
+          DEFAULT: "hsl(var(--cta-bg))",
+          foreground: "hsl(var(--cta-foreground))",
+        },
+        quiz: {
+          option: "hsl(var(--quiz-option-bg))",
+          "option-border": "hsl(var(--quiz-option-border))",
+          "option-hover": "hsl(var(--quiz-option-hover))",
+          "progress-track": "hsl(var(--quiz-progress-track))",
+          "progress-fill": "hsl(var(--quiz-progress-fill))",
+          "check-bg": "hsl(var(--quiz-check-bg))",
+          "check-border": "hsl(var(--quiz-check-border))",
         },
       },
       borderRadius: {
