@@ -1,4 +1,5 @@
 import BonusCard from "./BonusCard";
+import CountdownTimer from "./CountdownTimer";
 import testimonial1 from "@/assets/testimonial-1.png";
 import testimonial2 from "@/assets/testimonial-2.png";
 import testimonial3 from "@/assets/testimonial-3.png";
@@ -53,18 +54,96 @@ const bonuses = [
   },
 ];
 
+const CTAButton = () => (
+  <button
+    onClick={() => window.open("#", "_blank")}
+    className="w-full py-4 rounded-lg bg-cta text-cta-foreground font-bold text-lg uppercase tracking-wide hover:opacity-90 transition-opacity animate-pulse"
+  >
+    Clique aqui para RECONQUISTAR sua ex!
+  </button>
+);
+
 const SalesSection = () => {
   return (
     <div className="flex flex-col gap-6 w-full animate-fade-in mt-6">
+      {/* Protocolo Gerado header */}
       <div className="text-center">
-        <h2 className="text-xl font-bold text-foreground mb-2">
-          🎁 Seu Protocolo está pronto!
+        <h2 className="text-xl font-bold text-foreground mb-1">
+          ✅ Protocolo Gerado!
         </h2>
         <p className="text-muted-foreground text-sm">
-          Além do protocolo, você receberá <strong className="text-foreground">7 bônus exclusivos</strong> totalmente grátis:
+          Resgate agora... 👇
         </p>
       </div>
 
+      {/* Countdown Timer */}
+      <CountdownTimer />
+
+      {/* CTA 1 */}
+      <CTAButton />
+
+      {/* Guarantee section */}
+      <div className="flex flex-col gap-3 text-foreground text-sm leading-relaxed">
+        <p className="text-center font-semibold text-base">
+          Ao garantir seu acesso ao <strong>CÓDIGO DA RECONQUISTA</strong> você recebe uma{" "}
+          <strong>GARANTIA INQUEBRÁVEL</strong> de 90 dias{" "}
+          <strong className="text-primary">+5 PRESENTES</strong>! ⬇️
+        </p>
+
+        <p>Eu sei exatamente o que está passando pela sua cabeça agora.</p>
+        <p>"E se eu comprar e nada acontecer?"</p>
+        <p>"E se ela não voltar?"</p>
+        <p>"E se for só mais uma promessa vazia na internet?"</p>
+
+        <p>
+          E é por isso que eu decidi fazer algo que nenhum outro especialista em relacionamentos tem coragem de fazer: te dar{" "}
+          <strong>uma garantia de 90 dias</strong>, sem pegadinhas e sem letra miúda.
+        </p>
+
+        <p className="font-semibold">Funciona assim:</p>
+        <p>Você entra pro Código da Reconquista hoje…</p>
+        <p>Aplica o que eu ensino, envia as mensagens, segue o protocolo passo a passo…</p>
+        <p>
+          E se em até 90 dias sua ex não voltar pra você, eu devolvo cada centavo do seu investimento.
+        </p>
+        <p className="font-semibold">Sem perguntas, sem burocracia, sem letras miúdas.</p>
+        <p>Se não funcionar pra você, você não paga nada.</p>
+        <p className="font-semibold">Simples assim.</p>
+
+        <p>Eu faço isso porque sei o que eu entrego.</p>
+        <p>E porque já vi esse mesmo método transformar homens destruídos:</p>
+        <p>Em caras que reconquistaram o respeito, o desejo e o amor da mulher que mais amavam.</p>
+
+        <p>Então, você não tá investindo em "mais um curso".</p>
+        <p>Você está investindo em uma segunda chance de reescrever a história da sua vida amorosa.</p>
+        <p className="font-semibold">E eu confio tanto nesse método que boto meu nome e minha reputação em jogo pra provar isso.</p>
+
+        <p>Então, agora é contigo.</p>
+        <p>Você pode continuar rolando a tela, fingindo que vai pensar mais um pouco…</p>
+        <p>Ou pode clicar no botão abaixo…</p>
+        <p className="font-semibold">E começar agora o processo que vai trazer a sua ex de volta pra sua vida.</p>
+
+        <p className="font-semibold">A escolha é simples:</p>
+        <p>💔 Ficar preso nos 12% e perder ela pra sempre.</p>
+        <p>❤️ Ou agir agora e usar o mesmo protocolo que já reconectou mais de 30 mil casais.</p>
+
+        <p className="text-center font-semibold">
+          Clique aqui e garanta seu acesso ao <strong>Código da Reconquista</strong> com 90 dias de garantia 👇
+        </p>
+      </div>
+
+      {/* CTA 2 */}
+      <CTAButton />
+
+      {/* Bonus intro */}
+      <div className="text-center">
+        <p className="text-foreground text-base font-semibold">
+          E se você agir agora, eu vou te entregar{" "}
+          <strong className="text-primary">+5 presentes especiais</strong>, olha só!
+        </p>
+      </div>
+
+      {/* Bonus cards */}
       <div className="flex flex-col gap-4">
         {bonuses.map((bonus, i) => (
           <BonusCard
@@ -112,13 +191,8 @@ const SalesSection = () => {
         <p className="font-bold text-center">E você pode tomar essa mesma decisão apertando o botão abaixo:</p>
       </div>
 
-      {/* CTA 1 */}
-      <button
-        onClick={() => window.open("#", "_blank")}
-        className="w-full py-4 rounded-lg bg-cta text-cta-foreground font-bold text-lg uppercase tracking-wide hover:opacity-90 transition-opacity animate-pulse"
-      >
-        QUERO MEU PROTOCOLO AGORA!
-      </button>
+      {/* CTA 3 */}
+      <CTAButton />
 
       {/* Second copy block */}
       <div className="flex flex-col gap-3 text-foreground text-sm leading-relaxed mt-4">
@@ -134,13 +208,8 @@ const SalesSection = () => {
         <p className="font-bold text-center">E assuma o seu lugar — no centro dos pensamentos dela.</p>
       </div>
 
-      {/* CTA 2 */}
-      <button
-        onClick={() => window.open("#", "_blank")}
-        className="w-full py-4 rounded-lg bg-cta text-cta-foreground font-bold text-lg uppercase tracking-wide hover:opacity-90 transition-opacity animate-pulse"
-      >
-        QUERO MEU PROTOCOLO AGORA!
-      </button>
+      {/* CTA 4 */}
+      <CTAButton />
 
       <p className="text-muted-foreground text-xs text-center">
         ⚡ Oferta por tempo limitado. Os bônus podem ser removidos a qualquer momento.
