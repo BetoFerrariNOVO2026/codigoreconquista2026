@@ -30,7 +30,7 @@ const quizData = [
     ],
   },
   {
-    question: "O que mais dói em você desde o término?",
+    question: "O que mais dói em você desde o Término?",
     options: [
       "Solidão forte.",
       "Culpa e remorso.",
@@ -66,6 +66,18 @@ const quizData = [
   },
 ];
 
+const loadingSteps = [
+  "Gerando a mensagem exata que fura qualquer bloqueio e desperta saudade mesmo no silêncio",
+  "Criando o gatilho oculto que faz ela duvidar da decisão de te deixar",
+  "Gerando o plano de reaproximação que usa a culpa dela como força ao seu favor",
+  "Criando o roteiro emocional que transforma frieza em curiosidade e curiosidade em desejo",
+  "Gerando o texto perfeito pra reverter o desprezo e fazê-la procurar sua resposta",
+  "Criando o efeito dominó que destrói o novo relacionamento e traz o foco de volta pra você",
+  "Gerando a sequência proibida de mensagens que reabre a conversa sem parecer carência",
+  "Criando a virada psicológica que muda completamente a forma como ela te enxerga",
+  "Gerando Protocolo Personalizado!",
+];
+
 const Index = () => {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
@@ -73,29 +85,50 @@ const Index = () => {
   const [videoUrl, setVideoUrl] = useState("");
   const [videoFile, setVideoFile] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [loadingProgress, setLoadingProgress] = useState(0);
-  const [showVideo, setShowVideo] = useState(false);
+  const [loadingItems, setLoadingItems] = useState<number[]>([]);
+  const [loadingProgresses, setLoadingProgresses] = useState<number[]>(new Array(loadingSteps.length).fill(0));
 
   const handleSelect = (optionIndex: number) => {
     setAnswers({ ...answers, [step]: optionIndex });
     setTimeout(() => setStep((s) => s + 1), 400);
   };
 
-  // Loading animation on final page
+  // Sequential loading animation on final page
   useEffect(() => {
-    if (step === TOTAL_STEPS - 1) {
-      setLoadingProgress(0);
+    if (step !== TOTAL_STEPS - 1) return;
+
+    setLoadingItems([]);
+    setLoadingProgresses(new Array(loadingSteps.length).fill(0));
+
+    let currentIndex = 0;
+
+    const startNext = () => {
+      if (currentIndex >= loadingSteps.length) return;
+
+      const idx = currentIndex;
+      setLoadingItems((prev) => [...prev, idx]);
+
       const interval = setInterval(() => {
-        setLoadingProgress((p) => {
-          if (p >= 100) {
-            clearInterval(interval);
-            return 100;
+        setLoadingProgresses((prev) => {
+          const newP = [...prev];
+          newP[idx] = Math.min(newP[idx] + 2, 100);
+
+          // When this bar reaches ~70%, start the next one
+          if (newP[idx] >= 70 && idx === currentIndex) {
+            currentIndex++;
+            startNext();
           }
-          return p + 2;
+
+          if (newP[idx] >= 100) {
+            clearInterval(interval);
+          }
+
+          return newP;
         });
-      }, 80);
-      return () => clearInterval(interval);
-    }
+      }, 60);
+    };
+
+    startNext();
   }, [step]);
 
   // Page 1 - Landing
@@ -151,8 +184,8 @@ const Index = () => {
             <strong>protocolo personalizado de reconquista</strong>.
           </p>
 
-          {/* Video area */}
-          <div className="w-full aspect-video bg-foreground/5 rounded-lg overflow-hidden flex items-center justify-center">
+          {/* Video area - Story format (9:16) */}
+          <div className="w-full max-w-[320px] mx-auto rounded-lg overflow-hidden bg-foreground/5 flex items-center justify-center" style={{ aspectRatio: "9/16" }}>
             {videoFile ? (
               <video src={videoFile} controls className="w-full h-full object-contain" />
             ) : videoUrl ? (
@@ -165,7 +198,7 @@ const Index = () => {
             ) : (
               <div className="flex flex-col items-center gap-4 p-6">
                 <p className="text-muted-foreground text-sm font-medium">Escolha como adicionar o vídeo/VSL:</p>
-                <div className="flex gap-3">
+                <div className="flex flex-col gap-3">
                   <button
                     onClick={() => fileInputRef.current?.click()}
                     className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity"
@@ -210,22 +243,30 @@ const Index = () => {
             )}
           </div>
 
-          <p className="text-foreground font-bold text-sm">
-            Aguarde, estamos criando o seu Protocolo Personalizado de Reconquista…
-          </p>
-
-          <div className="flex items-start gap-2 text-left">
-            <span className="text-primary">🔄</span>
-            <p className="text-sm text-foreground">
-              Gerando a mensagem exata que fura qualquer bloqueio e 85% desperta saudade mesmo no silêncio
-            </p>
-          </div>
-
-          <div className="w-full h-2 rounded-full bg-quiz-progress-track">
-            <div
-              className="h-full rounded-full bg-quiz-progress-fill transition-all duration-300"
-              style={{ width: `${loadingProgress}%` }}
-            />
+          {/* Sequential loading bars */}
+          <div className="flex flex-col gap-4 w-full text-left">
+            {loadingSteps.map((text, i) => {
+              if (!loadingItems.includes(i)) return null;
+              return (
+                <div key={i} className="flex flex-col gap-1">
+                  <div className="flex items-start gap-2">
+                    <span className="text-primary mt-0.5">🔄</span>
+                    <p className="text-sm text-foreground flex-1">
+                      {text}
+                    </p>
+                    <span className="text-sm text-foreground font-medium whitespace-nowrap">
+                      {loadingProgresses[i]}%
+                    </span>
+                  </div>
+                  <div className="w-full h-2 rounded-full bg-quiz-progress-track">
+                    <div
+                      className="h-full rounded-full bg-quiz-progress-fill transition-all duration-300"
+                      style={{ width: `${loadingProgresses[i]}%` }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </QuizLayout>
