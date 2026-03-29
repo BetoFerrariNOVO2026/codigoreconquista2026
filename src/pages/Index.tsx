@@ -99,6 +99,7 @@ const Index = () => {
   const [loadingItems, setLoadingItems] = useState<number[]>([]);
   const [loadingProgresses, setLoadingProgresses] = useState<number[]>(new Array(loadingSteps.length).fill(0));
   const [allLoaded, setAllLoaded] = useState(false);
+  const [saving, setSaving] = useState(false);
   const embedVideoUrl = buildVimeoEmbedUrl(videoUrl);
 
   useEffect(() => {
@@ -181,6 +182,26 @@ const Index = () => {
     startNext();
   }, [step]);
 
+  const handleSaveConfig = () => {
+    setSaving(true);
+    const trimmedVideo = normalizeStoredText(videoUrl);
+    const trimmedCheckout = normalizeStoredText(checkoutUrl);
+
+    if (trimmedVideo) {
+      localStorage.setItem(VSL_STORAGE_KEY, trimmedVideo);
+    } else {
+      localStorage.removeItem(VSL_STORAGE_KEY);
+    }
+
+    if (trimmedCheckout) {
+      localStorage.setItem(CHECKOUT_STORAGE_KEY, trimmedCheckout);
+    } else {
+      localStorage.removeItem(CHECKOUT_STORAGE_KEY);
+    }
+
+    setTimeout(() => setSaving(false), 600);
+  };
+
   // Page 1 - Landing
   if (step === 0) {
     return (
@@ -240,6 +261,8 @@ const Index = () => {
             onVideoUrlChange={setVideoUrl}
             onCheckoutUrlChange={setCheckoutUrl}
             videoValid={!videoUrl || Boolean(embedVideoUrl)}
+            onSave={handleSaveConfig}
+            saving={saving}
           />
 
           {/* Video area - Story format (9:16) */}
