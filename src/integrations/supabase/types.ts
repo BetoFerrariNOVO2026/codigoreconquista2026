@@ -14,7 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      funnel_config: {
+        Row: {
+          checkout_url: string
+          id: string
+          updated_at: string
+          vsl_url: string
+        }
+        Insert: {
+          checkout_url?: string
+          id?: string
+          updated_at?: string
+          vsl_url?: string
+        }
+        Update: {
+          checkout_url?: string
+          id?: string
+          updated_at?: string
+          vsl_url?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
