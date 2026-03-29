@@ -1,10 +1,19 @@
 import { useState, useRef, useEffect } from "react";
+import AdminConfigPanel from "@/components/AdminConfigPanel";
 import QuizLayout from "@/components/QuizLayout";
 import QuizOption from "@/components/QuizOption";
 import CheckItem from "@/components/CheckItem";
 import whatsappChat from "@/assets/whatsapp-chat.png";
 import SalesSection from "@/components/SalesSection";
 import { AlertCircle } from "lucide-react";
+import {
+  buildVimeoEmbedUrl,
+  CHECKOUT_STORAGE_KEY,
+  getStoredCheckoutUrl,
+  getStoredVideoUrl,
+  normalizeStoredText,
+  VSL_STORAGE_KEY,
+} from "@/lib/funnelConfig";
 
 const TOTAL_STEPS = 8;
 
@@ -79,42 +88,18 @@ const loadingSteps = [
   "Gerando Protocolo Personalizado!",
 ];
 
-const VSL_STORAGE_KEY = "vsl_video_url";
-
-const getStoredVideoUrl = () => {
-  if (typeof window === "undefined") return "";
-  return localStorage.getItem(VSL_STORAGE_KEY)?.trim() || "";
-};
-
-const getVimeoEmbedUrl = (url: string) => {
-  const trimmedUrl = url.trim();
-  if (!trimmedUrl) return "";
-  if (trimmedUrl.includes("player.vimeo.com/video/")) return trimmedUrl;
-
-  try {
-    const parsedUrl = new URL(trimmedUrl);
-    const videoId = parsedUrl.pathname.split("/").filter(Boolean).pop();
-
-    if (videoId && /^\d+$/.test(videoId)) {
-      return `https://player.vimeo.com/video/${videoId}`;
-    }
-  } catch {
-    return "";
-  }
-
-  return "";
-};
-
 const Index = () => {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [videoSource, setVideoSource] = useState<"upload" | "vimeo" | null>(null);
   const [videoUrl, setVideoUrl] = useState(getStoredVideoUrl);
+  const [checkoutUrl, setCheckoutUrl] = useState(getStoredCheckoutUrl);
   const [videoFile, setVideoFile] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loadingItems, setLoadingItems] = useState<number[]>([]);
   const [loadingProgresses, setLoadingProgresses] = useState<number[]>(new Array(loadingSteps.length).fill(0));
   const [allLoaded, setAllLoaded] = useState(false);
+  const embedVideoUrl = buildVimeoEmbedUrl(videoUrl);
 
   useEffect(() => {
     const storedVideoUrl = getStoredVideoUrl();
@@ -127,7 +112,7 @@ const Index = () => {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const trimmedVideoUrl = videoUrl.trim();
+    const trimmedVideoUrl = normalizeStoredText(videoUrl);
 
     if (trimmedVideoUrl) {
       localStorage.setItem(VSL_STORAGE_KEY, trimmedVideoUrl);
@@ -136,6 +121,19 @@ const Index = () => {
 
     localStorage.removeItem(VSL_STORAGE_KEY);
   }, [videoUrl]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const trimmedCheckoutUrl = normalizeStoredText(checkoutUrl);
+
+    if (trimmedCheckoutUrl) {
+      localStorage.setItem(CHECKOUT_STORAGE_KEY, trimmedCheckoutUrl);
+      return;
+    }
+
+    localStorage.removeItem(CHECKOUT_STORAGE_KEY);
+  }, [checkoutUrl]);
 
   const handleSelect = (optionIndex: number) => {
     setAnswers({ ...answers, [step]: optionIndex });
@@ -236,13 +234,22 @@ const Index = () => {
             <strong className="text-primary">protocolo personalizado de reconquista.</strong>
           </h2>
 
+          <AdminConfigPanel
+            videoUrl={videoUrl}
+            checkoutUrl={checkoutUrl}
+            onVideoUrlChange={setVideoUrl}
+            onCheckoutUrlChange={setCheckoutUrl}
+            videoValid={!videoUrl || Boolean(embedVideoUrl)}
+          />
+
           {/* Video area - Story format (9:16) */}
           <div className="w-full max-w-[320px] mx-auto rounded-lg overflow-hidden bg-foreground/5 flex items-center justify-center" style={{ aspectRatio: "9/16" }}>
             {videoFile ? (
               <video src={videoFile} controls className="w-full h-full object-contain" />
-            ) : getVimeoEmbedUrl(videoUrl) ? (
+            ) : embedVideoUrl ? (
               <iframe
-                src={getVimeoEmbedUrl(videoUrl)}
+                key={embedVideoUrl}
+                src={embedVideoUrl}
                 className="w-full h-full"
                 allow="autoplay; fullscreen"
                 allowFullScreen
@@ -285,6 +292,7 @@ const Index = () => {
                     />
                     <button
                       onClick={() => {
+                        setVideoUrl((currentUrl) => normalizeStoredText(currentUrl));
                         setVideoSource(null);
                       }}
                       className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium"
@@ -328,7 +336,7 @@ const Index = () => {
             })}
           </div>
 
-          {allLoaded && <SalesSection />}
+          {allLoaded && <SalesSection checkoutUrl={checkoutUrl} />}
         </div>
       </QuizLayout>
     );
