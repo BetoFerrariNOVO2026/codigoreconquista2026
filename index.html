@@ -10,7 +10,6 @@
 
     <!-- TODO: Update og:title to match your application name -->
     
-    
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e94d9864-01d6-457e-847b-f5db0b5b2837/id-preview-9292ba6f--37ea447e-3dbf-42a2-830f-65fd577c46ca.lovable.app-1774729694480.png">
 
@@ -21,6 +20,47 @@
   <meta name="twitter:title" content="Lovable App">
   <meta property="og:description" content="Lovable Generated Project">
   <meta name="twitter:description" content="Lovable Generated Project">
+<!-- Meta Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+  document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1610575396612536');
+  fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1610575396612536&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel Code -->
+
+<script
+  src="https://zwylxoajyyjflvvcwpvz.supabase.co/functions/v1/utms/latest.js"
+  data-gerenciaroi-prevent-xcod-sck
+  data-gerenciaroi-prevent-subids
+  async
+  defer
+></script> 
+
+    <!-- Gerencia ROI - Rastreamento ao Vivo -->
+<script>
+(function(){
+  var uid="0d6e183b-9b25-4bb6-a59c-187fd39f35fe";
+  var sid=Math.random().toString(36).substr(2,12)+Date.now().toString(36);
+  var url="https://zwylxoajyyjflvvcwpvz.supabase.co/functions/v1/track-visitor";
+  function send(action){
+    var data=JSON.stringify({user_id:uid,session_id:sid,page_url:location.href,action:action});
+    if(navigator.sendBeacon){navigator.sendBeacon(url,data)}
+    else{fetch(url,{method:"POST",body:data,headers:{"Content-Type":"application/json"},keepalive:true})}
+  }
+  send("heartbeat");
+  setInterval(function(){send("heartbeat")},15000);
+  window.addEventListener("beforeunload",function(){send("leave")});
+  document.addEventListener("visibilitychange",function(){
+    if(document.hidden){send("leave")}else{send("heartbeat")}
+  });
+})();
+</script>
+    
 </head>
 
   <body>
