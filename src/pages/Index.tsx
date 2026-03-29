@@ -83,7 +83,7 @@ const Index = () => {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [videoSource, setVideoSource] = useState<"upload" | "vimeo" | null>(null);
-  const [videoUrl, setVideoUrl] = useState("");
+  const [videoUrl, setVideoUrl] = useState(() => localStorage.getItem("vsl_video_url") || "");
   const [videoFile, setVideoFile] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loadingItems, setLoadingItems] = useState<number[]>([]);
@@ -237,7 +237,10 @@ const Index = () => {
                       className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
                     />
                     <button
-                      onClick={() => setVideoSource(null)}
+                      onClick={() => {
+                        localStorage.setItem("vsl_video_url", videoUrl);
+                        setVideoSource(null);
+                      }}
                       className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium"
                     >
                       OK
