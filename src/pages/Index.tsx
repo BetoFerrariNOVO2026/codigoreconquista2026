@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import AdminConfigPanel from "@/components/AdminConfigPanel";
 import QuizLayout from "@/components/QuizLayout";
 import QuizOption from "@/components/QuizOption";
@@ -6,21 +6,13 @@ import CheckItem from "@/components/CheckItem";
 import whatsappChat from "@/assets/whatsapp-chat.png";
 import SalesSection from "@/components/SalesSection";
 import { AlertCircle } from "lucide-react";
-import {
-  buildVimeoEmbedUrl,
-  CHECKOUT_STORAGE_KEY,
-  getStoredCheckoutUrl,
-  getStoredVideoUrl,
-  normalizeStoredText,
-  VSL_STORAGE_KEY,
-} from "@/lib/funnelConfig";
+import { buildVimeoEmbedUrl } from "@/lib/funnelConfig";
+import { useFunnelConfig } from "@/hooks/useFunnelConfig";
 
 const TOTAL_STEPS = 8;
 
 const quizData = [
-  {
-    question: null, // landing page
-  },
+  { question: null },
   {
     question: "Quando foi o término entre vocês?",
     options: [
@@ -91,50 +83,22 @@ const loadingSteps = [
 const Index = () => {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
-  const [videoSource, setVideoSource] = useState<"upload" | "vimeo" | null>(null);
-  const [videoUrl, setVideoUrl] = useState(getStoredVideoUrl);
-  const [checkoutUrl, setCheckoutUrl] = useState(getStoredCheckoutUrl);
-  const [videoFile, setVideoFile] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [loadingItems, setLoadingItems] = useState<number[]>([]);
   const [loadingProgresses, setLoadingProgresses] = useState<number[]>(new Array(loadingSteps.length).fill(0));
   const [allLoaded, setAllLoaded] = useState(false);
   const [saving, setSaving] = useState(false);
-  const embedVideoUrl = buildVimeoEmbedUrl(videoUrl);
 
+  const { config, saveConfig } = useFunnelConfig();
+  const [adminVideoUrl, setAdminVideoUrl] = useState("");
+  const [adminCheckoutUrl, setAdminCheckoutUrl] = useState("");
+
+  // Sync admin fields when config loads from DB
   useEffect(() => {
-    const storedVideoUrl = getStoredVideoUrl();
+    setAdminVideoUrl(config.vslUrl);
+    setAdminCheckoutUrl(config.checkoutUrl);
+  }, [config]);
 
-    if (storedVideoUrl && storedVideoUrl !== videoUrl) {
-      setVideoUrl(storedVideoUrl);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const trimmedVideoUrl = normalizeStoredText(videoUrl);
-
-    if (trimmedVideoUrl) {
-      localStorage.setItem(VSL_STORAGE_KEY, trimmedVideoUrl);
-      return;
-    }
-
-    localStorage.removeItem(VSL_STORAGE_KEY);
-  }, [videoUrl]);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const trimmedCheckoutUrl = normalizeStoredText(checkoutUrl);
-
-    if (trimmedCheckoutUrl) {
-      localStorage.setItem(CHECKOUT_STORAGE_KEY, trimmedCheckoutUrl);
-      return;
-    }
-
-    localStorage.removeItem(CHECKOUT_STORAGE_KEY);
-  }, [checkoutUrl]);
+  const embedVideoUrl = buildVimeoEmbedUrl(config.vslUrl);
 
   const handleSelect = (optionIndex: number) => {
     setAnswers({ ...answers, [step]: optionIndex });
@@ -182,24 +146,13 @@ const Index = () => {
     startNext();
   }, [step]);
 
-  const handleSaveConfig = () => {
+  const handleSaveConfig = async () => {
     setSaving(true);
-    const trimmedVideo = normalizeStoredText(videoUrl);
-    const trimmedCheckout = normalizeStoredText(checkoutUrl);
-
-    if (trimmedVideo) {
-      localStorage.setItem(VSL_STORAGE_KEY, trimmedVideo);
-    } else {
-      localStorage.removeItem(VSL_STORAGE_KEY);
-    }
-
-    if (trimmedCheckout) {
-      localStorage.setItem(CHECKOUT_STORAGE_KEY, trimmedCheckout);
-    } else {
-      localStorage.removeItem(CHECKOUT_STORAGE_KEY);
-    }
-
-    setTimeout(() => setSaving(false), 600);
+    await saveConfig({
+      vslUrl: adminVideoUrl.trim(),
+      checkoutUrl: adminCheckoutUrl.trim(),
+    });
+    setSaving(false);
   };
 
   // Page 1 - Landing
@@ -255,21 +208,20 @@ const Index = () => {
             <strong className="text-primary">protocolo personalizado de reconquista.</strong>
           </h2>
 
+          {/* Admin panel - hidden behind password */}
           <AdminConfigPanel
-            videoUrl={videoUrl}
-            checkoutUrl={checkoutUrl}
-            onVideoUrlChange={setVideoUrl}
-            onCheckoutUrlChange={setCheckoutUrl}
-            videoValid={!videoUrl || Boolean(embedVideoUrl)}
+            videoUrl={adminVideoUrl}
+            checkoutUrl={adminCheckoutUrl}
+            onVideoUrlChange={setAdminVideoUrl}
+            onCheckoutUrlChange={setAdminCheckoutUrl}
+            videoValid={!adminVideoUrl || Boolean(buildVimeoEmbedUrl(adminVideoUrl))}
             onSave={handleSaveConfig}
             saving={saving}
           />
 
-          {/* Video area - Story format (9:16) */}
+          {/* Video area - only shows video, no upload buttons for customers */}
           <div className="w-full max-w-[320px] mx-auto rounded-lg overflow-hidden bg-foreground/5 flex items-center justify-center" style={{ aspectRatio: "9/16" }}>
-            {videoFile ? (
-              <video src={videoFile} controls className="w-full h-full object-contain" />
-            ) : embedVideoUrl ? (
+            {embedVideoUrl ? (
               <iframe
                 key={embedVideoUrl}
                 src={embedVideoUrl}
@@ -278,52 +230,8 @@ const Index = () => {
                 allowFullScreen
               />
             ) : (
-              <div className="flex flex-col items-center gap-4 p-6">
-                <p className="text-muted-foreground text-sm font-medium">Escolha como adicionar o vídeo/VSL:</p>
-                <div className="flex flex-col gap-3">
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity"
-                  >
-                    📁 Upload do computador
-                  </button>
-                  <button
-                    onClick={() => setVideoSource("vimeo")}
-                    className="px-4 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm font-medium border border-border hover:opacity-90 transition-opacity"
-                  >
-                    🔗 Link do Vimeo
-                  </button>
-                </div>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="video/*"
-                  className="hidden"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) setVideoFile(URL.createObjectURL(file));
-                  }}
-                />
-                {videoSource === "vimeo" && (
-                  <div className="flex gap-2 w-full mt-2">
-                    <input
-                      type="text"
-                      placeholder="https://vimeo.com/..."
-                      value={videoUrl}
-                      onChange={(e) => setVideoUrl(e.target.value)}
-                      className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
-                    />
-                    <button
-                      onClick={() => {
-                        setVideoUrl((currentUrl) => normalizeStoredText(currentUrl));
-                        setVideoSource(null);
-                      }}
-                      className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium"
-                    >
-                      OK
-                    </button>
-                  </div>
-                )}
+              <div className="flex items-center justify-center p-6">
+                <p className="text-muted-foreground text-sm">Carregando vídeo...</p>
               </div>
             )}
           </div>
@@ -341,9 +249,7 @@ const Index = () => {
                 <div key={i} className="flex flex-col gap-1">
                   <div className="flex items-start gap-2">
                     <span className="text-primary mt-0.5">🔄</span>
-                    <p className="text-sm text-foreground flex-1">
-                      {text}
-                    </p>
+                    <p className="text-sm text-foreground flex-1">{text}</p>
                     <span className="text-sm text-foreground font-medium whitespace-nowrap">
                       {loadingProgresses[i]}%
                     </span>
@@ -359,7 +265,7 @@ const Index = () => {
             })}
           </div>
 
-          {allLoaded && <SalesSection checkoutUrl={checkoutUrl} />}
+          {allLoaded && <SalesSection checkoutUrl={config.checkoutUrl} />}
         </div>
       </QuizLayout>
     );
