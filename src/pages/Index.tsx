@@ -32,7 +32,7 @@ const quizData = [
     ],
   },
   {
-    question: "O que mais dói em você desde o Término?",
+    question: "O que mais te incomoda desde o Término?",
     options: [
       "Solidão forte.",
       "Culpa e remorso.",
