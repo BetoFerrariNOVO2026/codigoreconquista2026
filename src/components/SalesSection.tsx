@@ -1,5 +1,6 @@
 import BonusCard from "./BonusCard";
 import CountdownTimer from "./CountdownTimer";
+import { DEFAULT_CHECKOUT_URL } from "@/lib/funnelConfig";
 import testimonial1 from "@/assets/testimonial-1.png";
 import testimonial2 from "@/assets/testimonial-2.png";
 import testimonial3 from "@/assets/testimonial-3.png";
@@ -54,16 +55,20 @@ const bonuses = [
   },
 ];
 
-const CTAButton = () => (
+type SalesSectionProps = {
+  checkoutUrl?: string;
+};
+
+const CTAButton = ({ checkoutUrl }: { checkoutUrl: string }) => (
   <button
-    onClick={() => window.open("https://adsroi.com.br/checkout/sDGnMp?aff=[ID_AFILIADO]", "_blank")}
+    onClick={() => window.open(checkoutUrl || DEFAULT_CHECKOUT_URL, "_blank")}
     className="w-full py-4 rounded-lg bg-cta text-cta-foreground font-bold text-lg uppercase tracking-wide hover:opacity-90 transition-opacity animate-pulse"
   >
     Clique aqui para RECONQUISTAR sua ex!
   </button>
 );
 
-const SalesSection = () => {
+const SalesSection = ({ checkoutUrl = DEFAULT_CHECKOUT_URL }: SalesSectionProps) => {
   return (
     <div className="flex flex-col gap-6 w-full animate-fade-in mt-6">
       {/* Protocolo Gerado header */}
@@ -80,7 +85,7 @@ const SalesSection = () => {
       <CountdownTimer />
 
       {/* CTA 1 */}
-      <CTAButton />
+      <CTAButton checkoutUrl={checkoutUrl} />
 
       {/* Guarantee section */}
       <div className="flex flex-col gap-3 text-foreground text-sm leading-relaxed">
@@ -133,7 +138,7 @@ const SalesSection = () => {
       </div>
 
       {/* CTA 2 */}
-      <CTAButton />
+      <CTAButton checkoutUrl={checkoutUrl} />
 
       {/* Bonus intro */}
       <div className="text-center">
@@ -192,7 +197,7 @@ const SalesSection = () => {
       </div>
 
       {/* CTA 3 */}
-      <CTAButton />
+      <CTAButton checkoutUrl={checkoutUrl} />
 
       {/* Second copy block */}
       <div className="flex flex-col gap-3 text-foreground text-sm leading-relaxed mt-4">
@@ -209,7 +214,7 @@ const SalesSection = () => {
       </div>
 
       {/* CTA 4 */}
-      <CTAButton />
+      <CTAButton checkoutUrl={checkoutUrl} />
 
       <p className="text-muted-foreground text-xs text-center">
         ⚡ Oferta por tempo limitado. Os bônus podem ser removidos a qualquer momento.
