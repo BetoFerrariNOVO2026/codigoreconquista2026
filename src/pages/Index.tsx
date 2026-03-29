@@ -187,7 +187,20 @@ const Index = () => {
           >
             QUERO RECONQUISTAR MINHA EX!
           </button>
-
+          
+<!-- Meta Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+  document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1610575396612536');
+  fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1610575396612536&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel Code -->
+  
           <div className="flex flex-col gap-3 w-full">
             <CheckItem text="Além dessa mensagem você receberá um protocolo personalizado de reconquista." />
             <CheckItem text="Descobrirá qual é o erro que faz 93% dos homens perder a ex pra sempre e como evitá-lo." />
