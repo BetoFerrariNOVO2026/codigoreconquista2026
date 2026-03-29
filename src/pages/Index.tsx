@@ -79,16 +79,63 @@ const loadingSteps = [
   "Gerando Protocolo Personalizado!",
 ];
 
+const VSL_STORAGE_KEY = "vsl_video_url";
+
+const getStoredVideoUrl = () => {
+  if (typeof window === "undefined") return "";
+  return localStorage.getItem(VSL_STORAGE_KEY)?.trim() || "";
+};
+
+const getVimeoEmbedUrl = (url: string) => {
+  const trimmedUrl = url.trim();
+  if (!trimmedUrl) return "";
+  if (trimmedUrl.includes("player.vimeo.com/video/")) return trimmedUrl;
+
+  try {
+    const parsedUrl = new URL(trimmedUrl);
+    const videoId = parsedUrl.pathname.split("/").filter(Boolean).pop();
+
+    if (videoId && /^\d+$/.test(videoId)) {
+      return `https://player.vimeo.com/video/${videoId}`;
+    }
+  } catch {
+    return "";
+  }
+
+  return "";
+};
+
 const Index = () => {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [videoSource, setVideoSource] = useState<"upload" | "vimeo" | null>(null);
-  const [videoUrl, setVideoUrl] = useState(() => localStorage.getItem("vsl_video_url") || "");
+  const [videoUrl, setVideoUrl] = useState(getStoredVideoUrl);
   const [videoFile, setVideoFile] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loadingItems, setLoadingItems] = useState<number[]>([]);
   const [loadingProgresses, setLoadingProgresses] = useState<number[]>(new Array(loadingSteps.length).fill(0));
   const [allLoaded, setAllLoaded] = useState(false);
+
+  useEffect(() => {
+    const storedVideoUrl = getStoredVideoUrl();
+
+    if (storedVideoUrl && storedVideoUrl !== videoUrl) {
+      setVideoUrl(storedVideoUrl);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const trimmedVideoUrl = videoUrl.trim();
+
+    if (trimmedVideoUrl) {
+      localStorage.setItem(VSL_STORAGE_KEY, trimmedVideoUrl);
+      return;
+    }
+
+    localStorage.removeItem(VSL_STORAGE_KEY);
+  }, [videoUrl]);
 
   const handleSelect = (optionIndex: number) => {
     setAnswers({ ...answers, [step]: optionIndex });
@@ -193,9 +240,9 @@ const Index = () => {
           <div className="w-full max-w-[320px] mx-auto rounded-lg overflow-hidden bg-foreground/5 flex items-center justify-center" style={{ aspectRatio: "9/16" }}>
             {videoFile ? (
               <video src={videoFile} controls className="w-full h-full object-contain" />
-            ) : videoUrl ? (
+            ) : getVimeoEmbedUrl(videoUrl) ? (
               <iframe
-                src={videoUrl.replace("vimeo.com/", "player.vimeo.com/video/")}
+                src={getVimeoEmbedUrl(videoUrl)}
                 className="w-full h-full"
                 allow="autoplay; fullscreen"
                 allowFullScreen
@@ -238,7 +285,6 @@ const Index = () => {
                     />
                     <button
                       onClick={() => {
-                        localStorage.setItem("vsl_video_url", videoUrl);
                         setVideoSource(null);
                       }}
                       className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium"
