@@ -56,7 +56,7 @@ const bonuses = [
 
 const CTAButton = () => (
   <button
-    onClick={() => window.open("#", "_blank")}
+    onClick={() => window.open("https://adsroi.com.br/checkout/sDGnMp?aff=[ID_AFILIADO]", "_blank")}
     className="w-full py-4 rounded-lg bg-cta text-cta-foreground font-bold text-lg uppercase tracking-wide hover:opacity-90 transition-opacity animate-pulse"
   >
     Clique aqui para RECONQUISTAR sua ex!
