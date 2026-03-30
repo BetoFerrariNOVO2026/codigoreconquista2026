@@ -70,6 +70,8 @@ const Index = () => {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
 
+  useFunnelTracking(step);
+
   const handleSelect = (optionIndex: number) => {
     setAnswers({ ...answers, [step]: optionIndex });
 
