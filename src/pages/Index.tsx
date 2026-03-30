@@ -9,7 +9,8 @@ import { AlertCircle } from "lucide-react";
 import { buildVimeoEmbedUrl } from "@/lib/funnelConfig";
 import { useFunnelConfig } from "@/hooks/useFunnelConfig";
 
-const TOTAL_STEPS = 8;
+const TOTAL_STEPS = 7;
+const EXTERNAL_LINK = "https://dream-real.top/secretlove-beto-01/";
 
 const quizData = [
   { question: null },
