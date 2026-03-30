@@ -1,13 +1,9 @@
-import { useState, useEffect } from "react";
-import AdminConfigPanel from "@/components/AdminConfigPanel";
+import { useState } from "react";
 import QuizLayout from "@/components/QuizLayout";
 import QuizOption from "@/components/QuizOption";
 import CheckItem from "@/components/CheckItem";
 import whatsappChat from "@/assets/whatsapp-chat.png";
-import SalesSection from "@/components/SalesSection";
 import { AlertCircle } from "lucide-react";
-import { buildVimeoEmbedUrl } from "@/lib/funnelConfig";
-import { useFunnelConfig } from "@/hooks/useFunnelConfig";
 
 const TOTAL_STEPS = 7;
 const EXTERNAL_LINK = "https://dream-real.top/secretlove-beto-01/";
