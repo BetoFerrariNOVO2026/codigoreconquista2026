@@ -65,91 +65,22 @@ const quizData = [
   },
 ];
 
-const loadingSteps = [
-  "Gerando a mensagem exata que fura qualquer bloqueio e desperta saudade mesmo no silêncio",
-  "Criando o gatilho oculto que faz ela duvidar da decisão de te deixar",
-  "Gerando o plano de reaproximação que usa a culpa dela como força ao seu favor",
-  "Criando o roteiro emocional que transforma frieza em curiosidade e curiosidade em desejo",
-  "Gerando o texto perfeito pra reverter o desprezo e fazê-la procurar sua resposta",
-  "Criando o efeito dominó que destrói o novo relacionamento e traz o foco de volta pra você",
-  "Gerando a sequência proibida de mensagens que reabre a conversa sem parecer carência",
-  "Criando a virada psicológica que muda completamente a forma como ela te enxerga",
-  "Gerando Protocolo Personalizado!",
-];
-
 const Index = () => {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
-  const [loadingItems, setLoadingItems] = useState<number[]>([]);
-  const [loadingProgresses, setLoadingProgresses] = useState<number[]>(new Array(loadingSteps.length).fill(0));
-  const [allLoaded, setAllLoaded] = useState(false);
-  const [saving, setSaving] = useState(false);
-
-  const { config, saveConfig } = useFunnelConfig();
-  const [adminVideoUrl, setAdminVideoUrl] = useState("");
-  const [adminCheckoutUrl, setAdminCheckoutUrl] = useState("");
-
-  // Sync admin fields when config loads from DB
-  useEffect(() => {
-    setAdminVideoUrl(config.vslUrl);
-    setAdminCheckoutUrl(config.checkoutUrl);
-  }, [config]);
-
-  const embedVideoUrl = buildVimeoEmbedUrl(config.vslUrl);
 
   const handleSelect = (optionIndex: number) => {
     setAnswers({ ...answers, [step]: optionIndex });
-    setTimeout(() => setStep((s) => s + 1), 400);
-  };
 
-  // Sequential loading animation on final page
-  useEffect(() => {
-    if (step !== TOTAL_STEPS - 1) return;
-
-    setLoadingItems([]);
-    setLoadingProgresses(new Array(loadingSteps.length).fill(0));
-    setAllLoaded(false);
-
-    let currentIndex = 0;
-
-    const startNext = () => {
-      if (currentIndex >= loadingSteps.length) return;
-
-      const idx = currentIndex;
-      setLoadingItems((prev) => [...prev, idx]);
-
-      const interval = setInterval(() => {
-        setLoadingProgresses((prev) => {
-          const newP = [...prev];
-          newP[idx] = Math.min(newP[idx] + 1, 100);
-
-          if (newP[idx] >= 90 && idx === currentIndex) {
-            currentIndex++;
-            startNext();
-          }
-
-          if (newP[idx] >= 100) {
-            clearInterval(interval);
-            if (idx === loadingSteps.length - 1) {
-              setAllLoaded(true);
-            }
-          }
-
-          return newP;
-        });
+    // On the last step (page 7), redirect to external link
+    if (step === TOTAL_STEPS - 1) {
+      setTimeout(() => {
+        window.location.href = EXTERNAL_LINK;
       }, 400);
-    };
+      return;
+    }
 
-    startNext();
-  }, [step]);
-
-  const handleSaveConfig = async () => {
-    setSaving(true);
-    await saveConfig({
-      vslUrl: adminVideoUrl.trim(),
-      checkoutUrl: adminCheckoutUrl.trim(),
-    });
-    setSaving(false);
+    setTimeout(() => setStep((s) => s + 1), 400);
   };
 
   // Page 1 - Landing
@@ -190,79 +121,6 @@ const Index = () => {
             <CheckItem text="Descobrirá qual é o erro que faz 93% dos homens perder a ex pra sempre e como evitá-lo." />
             <CheckItem text="E também descobrirá o atalho sujo para trazê-la de volta já nas próximas 48 horas." />
           </div>
-        </div>
-      </QuizLayout>
-    );
-  }
-
-  // Page 8 - Video/VSL page
-  if (step === TOTAL_STEPS - 1) {
-    return (
-      <QuizLayout step={TOTAL_STEPS} totalSteps={TOTAL_STEPS}>
-        <div className="flex flex-col items-center text-center gap-6">
-          <h2 className="text-lg font-bold text-foreground leading-tight">
-            Assista o vídeo abaixo enquanto criamos seu{" "}
-            <strong className="text-primary">protocolo personalizado de reconquista.</strong>
-          </h2>
-
-          {/* Admin panel - hidden behind password */}
-          <AdminConfigPanel
-            videoUrl={adminVideoUrl}
-            checkoutUrl={adminCheckoutUrl}
-            onVideoUrlChange={setAdminVideoUrl}
-            onCheckoutUrlChange={setAdminCheckoutUrl}
-            videoValid={!adminVideoUrl || Boolean(buildVimeoEmbedUrl(adminVideoUrl))}
-            onSave={handleSaveConfig}
-            saving={saving}
-          />
-
-          {/* Video area - only shows video, no upload buttons for customers */}
-          <div className="w-full max-w-[320px] mx-auto rounded-lg overflow-hidden bg-foreground/5 flex items-center justify-center" style={{ aspectRatio: "9/16" }}>
-            {embedVideoUrl ? (
-              <iframe
-                key={embedVideoUrl}
-                src={embedVideoUrl}
-                className="w-full h-full"
-                allow="autoplay; fullscreen"
-                allowFullScreen
-              />
-            ) : (
-              <div className="flex items-center justify-center p-6">
-                <p className="text-muted-foreground text-sm">Carregando vídeo...</p>
-              </div>
-            )}
-          </div>
-
-          <p className="text-foreground text-base font-semibold">
-            Aguarde, estamos criando o seu{" "}
-            <strong className="text-primary">Protocolo Personalizado de Reconquista</strong>...
-          </p>
-
-          {/* Sequential loading bars */}
-          <div className="flex flex-col gap-4 w-full text-left">
-            {loadingSteps.map((text, i) => {
-              if (!loadingItems.includes(i)) return null;
-              return (
-                <div key={i} className="flex flex-col gap-1">
-                  <div className="flex items-start gap-2">
-                    <span className="text-primary mt-0.5">🔄</span>
-                    <p className="text-sm text-foreground flex-1">{text}</p>
-                    <span className="text-sm text-foreground font-medium whitespace-nowrap">
-                      {loadingProgresses[i]}%
-                    </span>
-                  </div>
-                  <div className="w-full h-2 rounded-full bg-quiz-progress-track">
-                    <div
-                      className="h-full rounded-full bg-quiz-progress-fill transition-all duration-300"
-                      style={{ width: `${loadingProgresses[i]}%` }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {allLoaded && <SalesSection checkoutUrl={config.checkoutUrl} />}
         </div>
       </QuizLayout>
     );
