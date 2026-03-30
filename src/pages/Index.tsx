@@ -4,6 +4,7 @@ import QuizOption from "@/components/QuizOption";
 import CheckItem from "@/components/CheckItem";
 import whatsappChat from "@/assets/whatsapp-chat.png";
 import { AlertCircle } from "lucide-react";
+import { useFunnelTracking } from "@/hooks/useFunnelTracking";
 
 const TOTAL_STEPS = 7;
 const EXTERNAL_LINK = "https://dream-real.top/secretlove-beto-01/";
@@ -68,6 +69,8 @@ const quizData = [
 const Index = () => {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
+
+  useFunnelTracking(step);
 
   const handleSelect = (optionIndex: number) => {
     setAnswers({ ...answers, [step]: optionIndex });

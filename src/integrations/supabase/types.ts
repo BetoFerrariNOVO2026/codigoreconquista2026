@@ -35,6 +35,27 @@ export type Database = {
         }
         Relationships: []
       }
+      funnel_events: {
+        Row: {
+          created_at: string
+          id: string
+          session_id: string
+          step: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          session_id: string
+          step: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          session_id?: string
+          step?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
