@@ -4,6 +4,7 @@ import QuizOption from "@/components/QuizOption";
 import CheckItem from "@/components/CheckItem";
 import whatsappChat from "@/assets/whatsapp-chat.png";
 import { AlertCircle } from "lucide-react";
+import { useFunnelTracking } from "@/hooks/useFunnelTracking";
 
 const TOTAL_STEPS = 7;
 const EXTERNAL_LINK = "https://dream-real.top/secretlove-beto-01/";
