@@ -116,7 +116,7 @@ const Index = () => {
             onClick={() => setStep(1)}
             className="w-full py-4 rounded-lg bg-cta text-cta-foreground font-bold text-lg uppercase tracking-wide hover:opacity-90 transition-opacity"
           >
-            QUERO RECONQUISTAR MINHA EX!
+            CONTINUAR
           </button>
   
           <div className="flex flex-col gap-3 w-full">
